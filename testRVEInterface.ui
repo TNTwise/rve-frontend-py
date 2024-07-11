@@ -67,10 +67,35 @@ border-top-right-radius: 10px;
           <item>
            <widget class="QWidget" name="verticalWidget_2" native="true">
             <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>9</number>
+             </property>
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
+             <property name="topMargin">
+              <number>9</number>
+             </property>
+             <property name="rightMargin">
+              <number>9</number>
+             </property>
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
              <item>
               <widget class="QPushButton" name="pushButton_3">
                <property name="text">
                 <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="resources.qrc">
+                 <normaloff>:/icons/icons/home.svg</normaloff>:/icons/icons/home.svg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>35</width>
+                 <height>35</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -79,12 +104,15 @@ border-top-right-radius: 10px;
                <property name="text">
                 <string/>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="text">
-                <string/>
+               <property name="icon">
+                <iconset resource="resources.qrc">
+                 <normaloff>:/icons/icons/cpu.svg</normaloff>:/icons/icons/cpu.svg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>35</width>
+                 <height>35</height>
+                </size>
                </property>
               </widget>
              </item>
