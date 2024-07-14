@@ -1,19 +1,19 @@
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.uic import loadUiType
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from mainwindow import Ui_MainWindow # Import the UI class from the converted module
 
-# Load the .ui file
-def load_ui(ui_file, base_instance=None):
-   
-    ui = loadUiType(ui_file, base_instance)
-    return ui
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Set up the user interface from Designer.
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.homeBtn.clicked.connect(lambda: self.ui.homeBtn.setStyleSheet('QPushButton:checked { background-color: #6FC; }'
+                           'QPushButton { background-color: #CCC; }'))
 
 if __name__ == "__main__":
-    import sys
     app = QApplication(sys.argv)
-    
-    # Example usage
-    ui_file = "testRVEInterface.ui"
-    widget = load_ui(ui_file)
-    widget.show()
-    
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())
