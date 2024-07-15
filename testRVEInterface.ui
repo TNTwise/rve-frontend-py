@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1128</width>
-    <height>617</height>
+    <width>844</width>
+    <height>647</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,18 @@ QProgressBar{
 	border-bottom-left-radius: 10px;
 border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+QStackedWidget{
+	background-color:#16191d;
+	text-align:left;
+	padding:5px 10px;
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+QPushButton:checked{
+background-color:#676e7b
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -66,7 +78,7 @@ border-top-right-radius: 10px;
      <widget class="QWidget" name="centralWidget" native="true">
       <property name="minimumSize">
        <size>
-        <width>850</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
@@ -82,15 +94,76 @@ border-top-right-radius: 10px;
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>450</height>
+           <height>0</height>
           </size>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
+           <widget class="QStackedWidget" name="stackedWidget">
+            <widget class="QWidget" name="page">
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <pointsize>25</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Home</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_2">
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="font">
+                 <font>
+                  <pointsize>25</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Process</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_3">
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_3">
+                <property name="font">
+                 <font>
+                  <pointsize>25</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Settngs</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_4">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="font">
+                 <font>
+                  <pointsize>25</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>More</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
@@ -142,6 +215,12 @@ border-top-right-radius: 10px;
              </item>
              <item>
               <widget class="QProgressBar" name="progressBar">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="value">
                 <number>0</number>
                </property>
@@ -222,6 +301,12 @@ border-top-right-radius: 10px;
                  <height>35</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -244,6 +329,9 @@ border-top-right-radius: 10px;
                  <width>35</width>
                  <height>35</height>
                 </size>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -307,6 +395,9 @@ icon-align:center;
                  <height>35</height>
                 </size>
                </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -352,6 +443,9 @@ icon-align:center;
                  <width>35</width>
                  <height>35</height>
                 </size>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
