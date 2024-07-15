@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>844</width>
+    <width>897</width>
     <height>647</height>
    </rect>
   </property>
@@ -15,61 +15,44 @@
   </property>
   <property name="styleSheet">
    <string notr="true">*{
-	border: none;
-	background-color: transparent;
-	background: none;
-	padding: 0;
-	margin: 0;
 	color: #fff;
 }
-
 
 #centralwidget{
 	background-color:#1f232a;
 }
 #leftMenuSubContainer{
 	background-color:#16191d;
-   border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
+   border-radius: 30px;
 }
 #bottomMenuSubContainer{
 	background-color:#16191d;
-   border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
+   border-radius: 30px;
 }
 QPushButton{
     background-color:#2c313c;
 	text-align:left;
 	padding:5px 10px;
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+	border-radius: 10px;
 }
 QProgressBar{
     background-color:#2c313c;
 	text-align:left;
 	padding:5px 10px;
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+	border-radius: 10px;
+	
 }
 QStackedWidget{
 	background-color:#16191d;
 	text-align:left;
 	padding:5px 10px;
-	border-top-left-radius: 25px;
-	border-bottom-left-radius: 25px;
-border-top-right-radius: 25px;
-  border-bottom-right-radius: 25px;
+	border-radius: 25px;
 }
 QPushButton:checked{
-background-color:#676e7b
+	background-color:#676e7b;
+}
+QPushButton:hover{
+	background-color:#343b47;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -100,7 +83,13 @@ background-color:#676e7b
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <widget class="QStackedWidget" name="stackedWidget">
-            <widget class="QWidget" name="page">
+            <widget class="QWidget" name="homePage">
+             <property name="styleSheet">
+              <string notr="true">QWidget{
+background-color:#16191d
+
+}</string>
+             </property>
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="0">
                <widget class="QLabel" name="label">
@@ -116,7 +105,13 @@ background-color:#676e7b
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_2">
+            <widget class="QWidget" name="procPage">
+             <property name="styleSheet">
+              <string notr="true">QWidget{
+background-color:#16191d
+
+}</string>
+             </property>
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="0" column="0">
                <widget class="QLabel" name="label_2">
@@ -130,9 +125,24 @@ background-color:#676e7b
                 </property>
                </widget>
               </item>
+              <item row="1" column="0">
+               <widget class="QComboBox" name="comboBox">
+                <item>
+                 <property name="text">
+                  <string>g</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_3">
+            <widget class="QWidget" name="settingsPage">
+             <property name="styleSheet">
+              <string notr="true">QWidget{
+background-color:#16191d
+
+}</string>
+             </property>
              <layout class="QGridLayout" name="gridLayout_4">
               <item row="0" column="0">
                <widget class="QLabel" name="label_3">
@@ -148,7 +158,13 @@ background-color:#676e7b
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_4">
+            <widget class="QWidget" name="morePage">
+             <property name="styleSheet">
+              <string notr="true">QWidget{
+background-color:#16191d
+
+}</string>
+             </property>
              <layout class="QGridLayout" name="gridLayout_5">
               <item row="0" column="0">
                <widget class="QLabel" name="label_4">
@@ -379,7 +395,7 @@ background-color:#676e7b
                </property>
                <property name="styleSheet">
                 <string notr="true">text-align:left;
-icon-align:center;
+
 </string>
                </property>
                <property name="text">

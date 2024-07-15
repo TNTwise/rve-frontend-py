@@ -24,25 +24,25 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     #switch menus
     def switchToHomePage(self):
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentWidget(self.homePage)
         self.processBtn.setChecked(False)
         self.settingsBtn.setChecked(False)
         self.moreBtn.setChecked(False)
 
     def switchToProcessingPage(self):
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentWidget(self.procPage)
         self.homeBtn.setChecked(False)
         self.settingsBtn.setChecked(False)
         self.moreBtn.setChecked(False)
     
     def switchToSettingsPage(self):
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentWidget(self.settingsPage)
         self.homeBtn.setChecked(False)
         self.processBtn.setChecked(False)
         self.moreBtn.setChecked(False)
 
     def switchToMorePage(self):
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentWidget(self.morePage)
         self.homeBtn.setChecked(False)
         self.processBtn.setChecked(False)
         self.settingsBtn.setChecked(False)
