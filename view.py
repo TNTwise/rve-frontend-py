@@ -1,4 +1,5 @@
 import sys
+from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from mainwindow import Ui_MainWindow # Import the UI class from the converted module
 
@@ -17,6 +18,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.moreBtn.clicked.connect(self.switchToMorePage)
     # set default home page
         self.stackedWidget.setCurrentIndex(0)
+    # setup animations
+
+
 
     #switch menus
     def switchToHomePage(self):
