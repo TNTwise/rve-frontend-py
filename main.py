@@ -31,8 +31,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # connect file select buttons
         self.inputFileSelectButton.clicked.connect(self.openInputFile)
         self.outputFileSelectButton.clicked.connect(self.openOutputFolder)
-
-
+        # connect render button
+        self.startRenderButton.clicked.connect(self.startRender)
+        
     # switch menus
     def switchToHomePage(self):
         self.stackedWidget.setCurrentWidget(self.homePage)
@@ -95,6 +96,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.outputFileText.setText(self.outputFolder)
 
+    def startRender(self):
+        """
+        Function to start the rendering process
+        It will initially check for any issues with the current setup, (invalid file, no permissions, etc..)
+        Then, based on the settings selected, it will build a command that is then passed into rve-backend
+        Finally, It will handle the render via ffmpeg. Taking in the frames from pipe and handing them into ffmpeg on a sperate thread
+        """
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
