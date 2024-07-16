@@ -340,7 +340,7 @@ background-color:#16191d
     <item row="0" column="0" alignment="Qt::AlignLeft">
      <widget class="QWidget" name="leftMenuContainer" native="true">
       <property name="styleSheet">
-       <string notr="true">backgroud-color: #1f232a</string>
+       <string notr="true"></string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="leftMargin">
