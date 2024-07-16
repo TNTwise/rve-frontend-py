@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>647</height>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -124,26 +124,13 @@ background-color:#16191d
                   <height>16777215</height>
                  </size>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_7">
-                 <item>
-                  <widget class="QLabel" name="label_2">
-                   <property name="font">
-                    <font>
-                     <pointsize>25</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Process</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QWidget" name="inputFileContainer" native="true">
-                   <layout class="QHBoxLayout" name="horizontalLayout_4">
-                    <item>
-                     <widget class="QPushButton" name="pushButton_2">
-                      <property name="styleSheet">
-                       <string notr="true">QPushButton{
+                <property name="styleSheet">
+                 <string notr="true">QLineEdit{
+background-color:#2c313c;
+border-radius: 10px;
+}
+
+QPushButton{
     background-color:#2c313c;
 	text-align:left;
 	padding:5px 10px;
@@ -156,6 +143,27 @@ QPushButton:hover{
 	background-color:#343b47;
 }
 </string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <widget class="QWidget" name="inputFileContainer" native="true">
+                   <layout class="QHBoxLayout" name="horizontalLayout_4">
+                    <item>
+                     <widget class="QPushButton" name="inputFileSelectButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
                       </property>
                       <property name="text">
                        <string>Select Input File</string>
@@ -163,24 +171,65 @@ QPushButton:hover{
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPlainTextEdit" name="inputFileText">
-                      <property name="styleSheet">
-                       <string notr="true">QPlainTextEdit{
-background-color:#2c313c;
-border-radius: 10px;
-}
-</string>
-                      </property>
-                      <property name="lineWrapMode">
-                       <enum>QPlainTextEdit::NoWrap</enum>
-                      </property>
-                      <property name="readOnly">
-                       <bool>false</bool>
+                     <widget class="QLineEdit" name="inputFileText">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
                       </property>
                      </widget>
                     </item>
                    </layout>
                   </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="outputFileContainer" native="true">
+                   <layout class="QHBoxLayout" name="horizontalLayout_5">
+                    <item>
+                     <widget class="QPushButton" name="outputFileSelectButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Select Output File</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="outputFileText">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -192,9 +241,22 @@ border-radius: 10px;
                   <widget class="QWidget" name="previewSubContainer" native="true">
                    <layout class="QVBoxLayout" name="verticalLayout_8">
                     <item>
-                     <widget class="QLabel" name="label_5">
+                     <widget class="QLabel" name="previewLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QLabel{
+background-color:#2c313c;
+border-radius: 10px;
+}
+</string>
+                      </property>
                       <property name="text">
-                       <string>TextLabel</string>
+                       <string>Preview</string>
                       </property>
                      </widget>
                     </item>
@@ -205,9 +267,16 @@ border-radius: 10px;
                   <widget class="QWidget" name="infoSubContainer" native="true">
                    <layout class="QVBoxLayout" name="verticalLayout_9">
                     <item>
-                     <widget class="QLabel" name="label_6">
+                     <widget class="QLabel" name="videoInfoLabel">
+                      <property name="styleSheet">
+                       <string notr="true">QLabel{
+background-color:#2c313c;
+border-radius: 10px;
+}
+</string>
+                      </property>
                       <property name="text">
-                       <string>TextLabel</string>
+                       <string>videoInfo</string>
                       </property>
                      </widget>
                     </item>
@@ -340,7 +409,7 @@ background-color:#16191d
     <item row="0" column="0" alignment="Qt::AlignLeft">
      <widget class="QWidget" name="leftMenuContainer" native="true">
       <property name="styleSheet">
-       <string notr="true"></string>
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="leftMargin">
