@@ -122,13 +122,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def renderToPipeThread(self):
         command = [
             "./bin/python3.11",
-            os.path.join("rve-backend-py","rve-backend.py"),
+            os.path.join("backend","rve-backend.py"),
             "-i",
             self.inputFile,
             "-o",
             "PIPE",
             "--upscaleModel",
-            "2x_ModernSpanimationV1.pth",  # put actual model here, this is a placeholder
+            "2x_AnimeJaNai_V2_SuperUltraCompact_100k.pth",  # put actual model here, this is a placeholder
             "--half",
             "-b",
             "tensorrt",

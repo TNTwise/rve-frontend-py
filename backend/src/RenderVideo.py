@@ -137,7 +137,7 @@ class Render(FFMpegRender):
                 backend=self.backend
             )
             self.upscaleTimes = upscalePytorch.getScale()
-            self.setupRender = upscalePytorch.bytesToFrame
+            self.setupRender = upscalePytorch.bytesToFrame if self.backend == "pytorch" else upscalePytorch.bytesToFrameTensorRT
             self.upscale = upscalePytorch.renderToNPArray
 
         if self.backend == "ncnn":

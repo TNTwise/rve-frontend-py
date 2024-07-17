@@ -63,12 +63,13 @@ class UpscalePytorch:
 
  
                 fake_input = [torch.zeros((1, 3, width, height), dtype=torch.float, device="cpu")]
-                inputs = [torch.zeros((1, 3, height, width), dtype=torch.half, device="cuda")]
+                inputs = [torch.zeros((1, 3, height, width), dtype=self.dtype, device=self.device)]
                 model.cpu().eval().float()
                 model = model.model
                 model = torch.jit.trace(model, fake_input)
 
-            
+                model.to(dtype=self.dtype,device=self.device)
+                
 
                 model = torch_tensorrt.compile(
                     model,
@@ -101,6 +102,16 @@ class UpscalePytorch:
 
         model.to(device=device, dtype=dtype)
         return model
+
+    def bytesToFrameTensorRT(self, frame):
+        return (
+            torch.frombuffer(frame, dtype=torch.uint8)
+            .reshape(self.height, self.width, 3)
+            .to(self.device, dtype=self.dtype)
+            .permute(2, 0, 1)
+            .unsqueeze(0)
+            .mul_(1 / 255)
+        ).clamp(0.0, 1.0)
 
     def bytesToFrame(self, frame):
         return (
