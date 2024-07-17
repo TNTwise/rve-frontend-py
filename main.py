@@ -1,6 +1,7 @@
 import sys
 import os
 import subprocess
+from threading import Thread
 
 from PyQt6.QtCore import QPropertyAnimation, QPoint
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
@@ -17,7 +18,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # set up base variables
         self.homeDir = os.path.expanduser("~")
         self.interpolateTimes = 1
-        self.upscaleTimes = 1
+        self.upscaleTimes = 2
+        self.pipeInFrames = None
 
         # Set up the user interface from Designer.
         self.setupUi(self)
@@ -70,6 +72,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if it is valid, it will set self.inputFile to the input file, and set the text input field to the input file path.
         if it is not valid, it will give a warning to the user.
+        
+        > IMPLEMENT AFTER SELECT AI >  Last, It will enable the output select button, and auto create a default output file 
 
         *NOTE
         This function will set self.videoWidth, self.videoHeight, and self.videoFPS
@@ -92,6 +96,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # get fps
             self.videoFps = getVideoFPS(inputFile)
             self.inputFileText.setText(inputFile)
+            self.outputFileText.setEnabled(True)
+            self.outputFileSelectButton.setEnabled(True)
 
     # output file button
     def openOutputFolder(self):
@@ -112,15 +118,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def renderToPipeThread(self):
         command = [
             "python3",
-            "rve-backend.py",
+            os.path.join("rve-backend-py","rve-backend.py"),
             "-i",
             self.inputFile,
             "-o",
             "PIPE",
-            "-u",
-            "2x_ModernSpanimationV1.pth.ncnn",  # put actual model here, this is a placeholder
+            "--upscaleModel",
+            "2x_ModernSpanimationV1.pth",  # put actual model here, this is a placeholder
             "-b",
-            "ncnn",
+            "tensorrt",
         ]
 
         self.pipeInFrames = subprocess.Popen(
@@ -158,6 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "-y",
         ]
         writeOutFrames = subprocess.Popen(
+            
             command,
             stdin=subprocess.PIPE,
             text=True,
@@ -172,7 +179,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             * 3
         )  # 3 is for the channels (RGB)
         while True:
-            frame = writeOutFrames.stdout.read(outputChunk)
+            frame = self.pipeInFrames.stdout.read(outputChunk)
             if frame is None:
                 break
             writeOutFrames.stdin.buffer.write(frame)
@@ -186,8 +193,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Then, based on the settings selected, it will build a command that is then passed into rve-backend
         Finally, It will handle the render via ffmpeg. Taking in the frames from pipe and handing them into ffmpeg on a sperate thread
         """
-        pass
 
+        # Gui changes
+        self.startRenderButton.setEnabled(False)
+        
+        self.renderToPipeThread()
+        #self.ffmpegWriteThread()
+        writeThread = Thread(target=self.ffmpegWriteThread)
+        writeThread.start()
+
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

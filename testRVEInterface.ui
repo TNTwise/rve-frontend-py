@@ -14,10 +14,12 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">*{
+   <string notr="true">QLabel{
 	color: #fff;
 }
-
+QLineEdit{
+color: #fff;
+}
 #centralwidget{
 	background-color:#1f232a;
 }
@@ -48,6 +50,7 @@ QPushButton{
 	text-align:left;
 	padding:5px 10px;
 	border-radius: 10px;
+    color: #fff;
 }
 QPushButton:checked{
 	background-color:#676e7b;
@@ -142,6 +145,10 @@ QPushButton:checked{
 QPushButton:hover{
 	background-color:#343b47;
 }
+QPushButton:disabled{
+	background-color:#343b47;
+	color:gray;
+}
 </string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -188,6 +195,9 @@ QPushButton:hover{
                    <layout class="QHBoxLayout" name="horizontalLayout_5">
                     <item>
                      <widget class="QPushButton" name="outputFileSelectButton">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -207,6 +217,9 @@ QPushButton:hover{
                     </item>
                     <item>
                      <widget class="QLineEdit" name="outputFileText">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
