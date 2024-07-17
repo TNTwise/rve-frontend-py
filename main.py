@@ -131,7 +131,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "2x_ModernSpanimationV1.pth",  # put actual model here, this is a placeholder
             "--half",
             "-b",
-            "tensorrt",
+            "pytorch",
         ]
 
         self.pipeInFrames = subprocess.Popen(
@@ -187,8 +187,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         totalFrames = int(self.videoFrameCount * self.interpolateTimes)
         for i in range(totalFrames-1):
             frame = self.pipeInFrames.stdout.read(outputChunk)
-            if frame is None:
-                break
             writeOutFrames.stdin.buffer.write(frame)
         writeOutFrames.stdin.close()
         writeOutFrames.wait()
