@@ -125,6 +125,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "PIPE",
             "--upscaleModel",
             "2x_ModernSpanimationV1.pth",  # put actual model here, this is a placeholder
+            "--half",
             "-b",
             "tensorrt",
         ]
