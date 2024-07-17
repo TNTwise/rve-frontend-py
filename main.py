@@ -121,7 +121,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def renderToPipeThread(self):
         command = [
-            "python3",
+            "./bin/python3.11",
             os.path.join("rve-backend-py","rve-backend.py"),
             "-i",
             self.inputFile,
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "2x_ModernSpanimationV1.pth",  # put actual model here, this is a placeholder
             "--half",
             "-b",
-            "pytorch",
+            "tensorrt",
         ]
 
         self.pipeInFrames = subprocess.Popen(
