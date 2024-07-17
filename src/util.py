@@ -51,3 +51,31 @@ def getVideoFPS(video_path) -> float:
 
 def getDefaultOutputVideo(outputPath):
     pass
+
+def getVideoLength(video_path) -> int:
+    cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        raise ValueError("Error: Could not open video.")
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+
+    duration = total_frames / fps
+
+    cap.release()
+
+    return duration
+
+def getVideoFrameCount(video_path) -> int:
+    cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        raise ValueError("Error: Could not open video.")
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+
+    cap.release()
+
+    return total_frames

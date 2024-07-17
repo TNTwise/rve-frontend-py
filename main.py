@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from mainwindow import Ui_MainWindow  # Import the UI class from the converted module
 
 # other imports
-from src.util import checkValidVideo, getDefaultOutputVideo, getVideoFPS, getVideoRes
+from src.util import checkValidVideo, getDefaultOutputVideo, getVideoFPS, getVideoRes, getVideoLength, getVideoFrameCount
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -95,6 +95,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.videoWidth, self.videoHeight = getVideoRes(inputFile)
             # get fps
             self.videoFps = getVideoFPS(inputFile)
+            # get video length
+            self.videoLength = getVideoLength(inputFile)
+            # get video frame count
+            self.videoFrameCount = getVideoFrameCount(inputFile)
             self.inputFileText.setText(inputFile)
             self.outputFileText.setEnabled(True)
             self.outputFileSelectButton.setEnabled(True)
@@ -179,7 +183,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             * self.upscaleTimes
             * 3
         )  # 3 is for the channels (RGB)
-        while True:
+
+        totalFrames = int(self.videoFrameCount * self.interpolateTimes)
+        for i in range(totalFrames-1):
             frame = self.pipeInFrames.stdout.read(outputChunk)
             if frame is None:
                 break
