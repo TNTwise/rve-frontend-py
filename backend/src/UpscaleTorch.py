@@ -11,15 +11,18 @@ from src.Util import currentDirectory
 # tiling code permidently borrowed from https://github.com/chaiNNer-org/spandrel/issues/113#issuecomment-1907209731
 
 import tensorrt
+from polygraphy.backend.common import bytes_from_path
 from polygraphy.backend.trt import (
-    EngineFromNetwork,
-    NetworkFromOnnxBytes,
+    engine_from_network,
+    network_from_onnx_bytes,
     TrtRunner,
     SaveEngine,
     Profile,
     CreateConfig,
-    EngineFromBytes
+    engine_from_bytes,
 )
+from polygraphy.logger import G_LOGGER
+
 class UpscalePytorch:
     @torch.inference_mode()
     def __init__(
@@ -57,11 +60,11 @@ class UpscalePytorch:
                     + f"_trt-{tensorrt.__version__}"
                     + (f"_workspace-{trt_workspace_size}" if trt_workspace_size > 0 else "")
                     + f"trt_opt-{trt_optimization_level}"
-                    + ".ts"
+                    + ".engine"
                 ),
             )
 
-            dummy_input = torch.zeros(1, 3, height, width).to(
+            '''dummy_input = torch.zeros(1, 3, height, width).to(
                 device=self.device, dtype=self.dtype
             )
             dynamic_axes = {
@@ -73,37 +76,41 @@ class UpscalePytorch:
                     model,
                     dummy_input,
                     onnxModel,
-                    opset_version=19,
+                    opset_version=17,
                     verbose=False,
                     input_names=["input"],
                     output_names=["output"],
                     dynamic_axes=dynamic_axes,
-                    do_constant_folding=True,
                 )
                 onnxModel.seek(0)
                 profiles = [
                     Profile().add(
                         "input",
-                        min=(1, 3, 128, 128),
+                        min=(1, 3, self.height, self.width ),
                         opt=(1, 3, self.height, self.width),
                         max=(1, 3, self.height, self.width),
                     ),
                 ]
-                build_engine = EngineFromNetwork(
-                    NetworkFromOnnxBytes(onnxModel.read()),
+                build_engine = engine_from_network(
+                    network_from_onnx_bytes(onnxModel.read()),
                     config=CreateConfig(profiles=profiles),
                 )
-                self.engine = SaveEngine(build_engine, path="identity.engine")
-                self.engine.__call__()
-        with open('identity.engine', "rb") as f:
-            engine_bytes = f.read()
+                engine = SaveEngine(build_engine, path=trt_engine_path)
+                engine.__call__()'''
         
-            engine = EngineFromBytes(engine_bytes)
-            self.runner = TrtRunner(engine)
-            self.runner.activate()
+            
+            
+            '''engine = engine_from_bytes(bytes_from_path(trt_engine_path))
+            # We can use the `optimization_profile` parameter of the runner to ensure that the correct optimization profile is used.
+            # This eliminates the need to call `set_profile()` later.
+            self.runner = TrtRunner(
+                engine.create_execution_context()
+            )  
+            self.runner.activate()'''
+                
 
 
-        self.model = model
+        self.model = model 
 
     def handlePrecision(self, precision):
         if precision == "float32":
