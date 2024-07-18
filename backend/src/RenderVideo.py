@@ -138,11 +138,7 @@ class Render(FFMpegRender):
             )
             self.upscaleTimes = upscalePytorch.getScale()
             self.setupRender = upscalePytorch.bytesToFrame
-            self.upscale = (
-                upscalePytorch.renderToNPArray
-                if self.backend == "pytorch"
-                else upscalePytorch.renderImageTensorRT
-            )
+            self.upscale = upscalePytorch.renderToNPArray
 
         if self.backend == "ncnn":
             self.upscaleTimes = getNCNNScale(modelPath=self.upscaleModel)

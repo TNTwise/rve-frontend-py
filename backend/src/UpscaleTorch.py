@@ -7,21 +7,12 @@ from io import BytesIO
 
 from spandrel import ModelLoader, ImageModelDescriptor
 from src.Util import currentDirectory
-
+import tensorrt as trt
 # tiling code permidently borrowed from https://github.com/chaiNNer-org/spandrel/issues/113#issuecomment-1907209731
 
-import tensorrt
-from polygraphy.backend.common import bytes_from_path
-from polygraphy.backend.trt import (
-    engine_from_network,
-    network_from_onnx_bytes,
-    TrtRunner,
-    SaveEngine,
-    Profile,
-    CreateConfig,
-    engine_from_bytes,
-)
-from polygraphy.logger import G_LOGGER
+
+import torch_tensorrt
+
 
 class UpscalePytorch:
     @torch.inference_mode()
@@ -43,10 +34,9 @@ class UpscalePytorch:
     ):
         self.tile_pad = tile_pad
         self.dtype = self.handlePrecision(precision)
-        self.device = device
+        self.device = torch.device("cuda", 0)
         model = self.loadModel(modelPath=modelPath, device=device, dtype=self.dtype)
-        self.scale = model.scale
-        model = model.model
+
         self.width = width
         self.height = height
         if backend == "tensorrt":
@@ -57,60 +47,45 @@ class UpscalePytorch:
                     + f"_{width}x{height}"
                     + f"_{'fp16' if self.dtype == torch.float16 else 'fp32'}"
                     + f"_{torch.cuda.get_device_name(device)}"
-                    + f"_trt-{tensorrt.__version__}"
-                    + (f"_workspace-{trt_workspace_size}" if trt_workspace_size > 0 else "")
-                    + f"trt_opt-{trt_optimization_level}"
-                    + ".engine"
+                    + f"_trt-{trt.__version__}"
+                    + (
+                        f"_workspace-{trt_workspace_size}"
+                        if trt_workspace_size > 0
+                        else ""
+                    )
+                    + ".ts"
                 ),
             )
 
-            '''dummy_input = torch.zeros(1, 3, height, width).to(
-                device=self.device, dtype=self.dtype
-            )
-            dynamic_axes = {
-                "input": {0: "batch_size", 2: "height", 3: "width"},
-                "output": {0: "batch_size", 2: "height", 3: "width"},
-            }
-            with BytesIO() as onnxModel:
-                torch.onnx.export(
-                    model,
-                    dummy_input,
-                    onnxModel,
-                    opset_version=17,
-                    verbose=False,
-                    input_names=["input"],
-                    output_names=["output"],
-                    dynamic_axes=dynamic_axes,
-                )
-                onnxModel.seek(0)
-                profiles = [
-                    Profile().add(
-                        "input",
-                        min=(1, 3, self.height, self.width ),
-                        opt=(1, 3, self.height, self.width),
-                        max=(1, 3, self.height, self.width),
-                    ),
+            if not os.path.isfile(trt_engine_path):
+                inputs = [
+                    torch.zeros(
+                        (1, 3, self.height, self.width), dtype=self.dtype, device=device
+                    )
                 ]
-                build_engine = engine_from_network(
-                    network_from_onnx_bytes(onnxModel.read()),
-                    config=CreateConfig(profiles=profiles),
+                dummy_input = [
+                    torch.zeros(
+                        (1, 3, self.height, self.width), dtype=torch.float32, device="cpu"
+                    )
+                ]
+                module = torch.jit.trace(model.float().cpu(), dummy_input)
+
+                module = torch_tensorrt.compile(
+                    module,
+                    ir="ts",
+                    inputs=inputs,
+                    enabled_precisions={self.dtype},
+                    device=torch_tensorrt.Device(gpu_id=0),
+                    workspace_size=trt_workspace_size,
+                    truncate_long_and_double=True,
+                    min_block_size=1,
                 )
-                engine = SaveEngine(build_engine, path=trt_engine_path)
-                engine.__call__()'''
-        
-            
-            
-            '''engine = engine_from_bytes(bytes_from_path(trt_engine_path))
-            # We can use the `optimization_profile` parameter of the runner to ensure that the correct optimization profile is used.
-            # This eliminates the need to call `set_profile()` later.
-            self.runner = TrtRunner(
-                engine.create_execution_context()
-            )  
-            self.runner.activate()'''
-                
 
+                torch.jit.save(module, trt_engine_path)
 
-        self.model = model 
+            model = torch.jit.load(trt_engine_path)
+
+        self.model = model
 
     def handlePrecision(self, precision):
         if precision == "float32":
@@ -118,14 +93,18 @@ class UpscalePytorch:
         if precision == "float16":
             return torch.float16
 
+    @torch.inference_mode()
     def loadModel(
         self, modelPath: str, dtype: torch.dtype = torch.float32, device: str = "cuda"
-    ) -> ImageModelDescriptor:
+    ) -> torch.nn.Module:
         model = ModelLoader().load_from_file(modelPath)
         assert isinstance(model, ImageModelDescriptor)
         # get model attributes
+        self.scale = model.scale
 
-        model.to(device=device, dtype=dtype)
+        model = model.model
+        model.load_state_dict(model.state_dict(), assign=True)
+        model.eval().to(self.device)
         if self.dtype == torch.float16:
             model.half()
         return model
@@ -134,7 +113,7 @@ class UpscalePytorch:
         return (
             torch.frombuffer(frame, dtype=torch.uint8)
             .reshape(self.height, self.width, 3)
-            .to(self.device, non_blocking=True, dtype=self.dtype)
+            .to(self.device, dtype=self.dtype)
             .permute(2, 0, 1)
             .unsqueeze(0)
             .mul_(1 / 255)
@@ -156,36 +135,22 @@ class UpscalePytorch:
         return image.squeeze(0).permute(1, 2, 0).float().mul(255).cpu().numpy()
 
     @torch.inference_mode()
-    def renderImageTensorRT(self, image: torch.Tensor) -> torch.Tensor:
-        
-            
-        outputs = self.runner.infer(feed_dict={"input": image})
-        return (
-            outputs['output']
-            .squeeze(0)
-            .permute(1, 2, 0)
-            .float()
-            .mul(255)
-            .byte()
-            .contiguous()
-            .cpu()
-            .numpy()
-        )
-
     @torch.inference_mode()
     def renderImage(self, image: torch.Tensor) -> torch.Tensor:
         upscaledImage = self.model(image)
         return upscaledImage
 
     def renderToNPArray(self, image: torch.Tensor) -> torch.Tensor:
+        output = self.model(image)
         return (
-            self.model(image)
-            .squeeze(0)
+            output.squeeze(0)
             .permute(1, 2, 0)
             .float()
+            .clamp(0.0, 1.0)
             .mul(255)
             .byte()
             .contiguous()
+            .detach()
             .cpu()
             .numpy()
         )

@@ -1,3 +1,6 @@
 [submodule "rve-backend-py"]
 	path = rve-backend-py
 	url = https://github.com/tntwise/rve-backend-py
+[submodule "backend/pynnlib"]
+	path = backend/pynnlib
+	url = https://github.com/herlegon/pynnlib.git
