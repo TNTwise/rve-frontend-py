@@ -4,8 +4,6 @@ import warnings
 cwd = os.getcwd()
 
 
-
-
 def warnAndLog(message: str):
     warnings.warn(message)
     log("WARN: " + message)

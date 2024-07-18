@@ -9,13 +9,13 @@ class HandleApplication:
         self.args = self.handleArguments()
         self.checkArguments()
         ffmpegSettings = Render(
-            #model settings
+            # model settings
             inputFile=self.args.input,
             outputFile=self.args.output,
             interpolateModel=self.args.interpolateModel,
             interpolateFactor=self.args.interpolateFactor,
             upscaleModel=self.args.upscaleModel,
-            #backend settings
+            # backend settings
             device="cuda",
             backend=self.args.backend,
             precision="float16" if self.args.half else "float32",
@@ -23,9 +23,8 @@ class HandleApplication:
             overwrite=self.args.overwrite,
             crf=self.args.crf,
             benchmark=self.args.benchmark,
-            encoder=self.args.custom_encoder
+            encoder=self.args.custom_encoder,
         )
-
 
     def handleArguments(self) -> argparse.ArgumentParser:
         """_summary_
@@ -163,14 +162,14 @@ class HandleApplication:
                 import tensorrt
             except ImportError as e:
                 raise ImportError(f"Cannot use TensorRT as the backend! {e}")
-            
+
         if self.args.backend == "ncnn":
             try:
                 import rife_ncnn_vulkan_python
                 from upscale_ncnn_py import UPSCALE
             except ImportError as e:
                 raise ImportError(f"Cannot use NCNN as the backend! {e}")
-            
+
         if os.path.isfile(self.args.output) and not self.args.overwrite:
             raise os.error("Output file already exists!")
 

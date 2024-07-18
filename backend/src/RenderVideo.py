@@ -1,4 +1,3 @@
-
 from threading import Thread
 
 from .FFmpeg import FFMpegRender
@@ -14,6 +13,7 @@ try:
     from .UpscaleTorch import UpscalePytorch
 except ImportError:
     print("WARN: unable to import pytorch.")
+
 
 class Render(FFMpegRender):
     """
@@ -134,11 +134,15 @@ class Render(FFMpegRender):
                 precision=self.precision,
                 width=self.width,
                 height=self.height,
-                backend=self.backend
+                backend=self.backend,
             )
             self.upscaleTimes = upscalePytorch.getScale()
-            self.setupRender = upscalePytorch.bytesToFrame if self.backend == "pytorch" else upscalePytorch.bytesToFrameTensorRT
-            self.upscale = upscalePytorch.renderToNPArray
+            self.setupRender = upscalePytorch.bytesToFrame
+            self.upscale = (
+                upscalePytorch.renderToNPArray
+                if self.backend == "pytorch"
+                else upscalePytorch.renderImageTensorRT
+            )
 
         if self.backend == "ncnn":
             self.upscaleTimes = getNCNNScale(modelPath=self.upscaleModel)

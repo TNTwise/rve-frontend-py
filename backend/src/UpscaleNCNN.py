@@ -3801,7 +3801,6 @@ class UpscaleNCNN:
         height: int = 1080,
     ):
         # only import if necessary
-        
 
         self.model = UPSCALE(
             gpuid=gpuid, model_str=modelPath, num_threads=num_threads, scale=scale
