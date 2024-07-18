@@ -3,16 +3,11 @@ import math
 import numpy as np
 import cv2
 import torch as torch
-from io import BytesIO
 
-from spandrel import ModelLoader, ImageModelDescriptor
+
 from src.Util import currentDirectory
-import tensorrt as trt
+
 # tiling code permidently borrowed from https://github.com/chaiNNer-org/spandrel/issues/113#issuecomment-1907209731
-
-
-import torch_tensorrt
-
 
 class UpscalePytorch:
     @torch.inference_mode()
@@ -40,6 +35,8 @@ class UpscalePytorch:
         self.width = width
         self.height = height
         if backend == "tensorrt":
+            import tensorrt as trt
+            import torch_tensorrt
             trt_engine_path = os.path.join(
                 os.path.realpath(trt_cache_dir),
                 (
@@ -97,6 +94,7 @@ class UpscalePytorch:
     def loadModel(
         self, modelPath: str, dtype: torch.dtype = torch.float32, device: str = "cuda"
     ) -> torch.nn.Module:
+        from spandrel import ModelLoader, ImageModelDescriptor
         model = ModelLoader().load_from_file(modelPath)
         assert isinstance(model, ImageModelDescriptor)
         # get model attributes
