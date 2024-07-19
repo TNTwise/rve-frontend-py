@@ -9,6 +9,7 @@ from src.Util import currentDirectory
 
 # tiling code permidently borrowed from https://github.com/chaiNNer-org/spandrel/issues/113#issuecomment-1907209731
 
+
 class UpscalePytorch:
     @torch.inference_mode()
     def __init__(
@@ -37,6 +38,7 @@ class UpscalePytorch:
         if backend == "tensorrt":
             import tensorrt as trt
             import torch_tensorrt
+
             trt_engine_path = os.path.join(
                 os.path.realpath(trt_cache_dir),
                 (
@@ -62,7 +64,9 @@ class UpscalePytorch:
                 ]
                 dummy_input = [
                     torch.zeros(
-                        (1, 3, self.height, self.width), dtype=torch.float32, device="cpu"
+                        (1, 3, self.height, self.width),
+                        dtype=torch.float32,
+                        device="cpu",
                     )
                 ]
                 module = torch.jit.trace(model.float().cpu(), dummy_input)
@@ -95,6 +99,7 @@ class UpscalePytorch:
         self, modelPath: str, dtype: torch.dtype = torch.float32, device: str = "cuda"
     ) -> torch.nn.Module:
         from spandrel import ModelLoader, ImageModelDescriptor
+
         model = ModelLoader().load_from_file(modelPath)
         assert isinstance(model, ImageModelDescriptor)
         # get model attributes
@@ -132,7 +137,6 @@ class UpscalePytorch:
     def tensorToNPArray(self, image: torch.Tensor) -> np.array:
         return image.squeeze(0).permute(1, 2, 0).float().mul(255).cpu().numpy()
 
-    @torch.inference_mode()
     @torch.inference_mode()
     def renderImage(self, image: torch.Tensor) -> torch.Tensor:
         upscaledImage = self.model(image)
